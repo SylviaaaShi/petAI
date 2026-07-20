@@ -1,0 +1,286 @@
+export type ServiceType = "boarding" | "home-visit" | "dog-walking" | "overnight" | "cat-sitting" | "daycare";
+export type PetType = "dog" | "cat" | "rabbit" | "bird" | "fish" | "small-animal";
+
+export interface Provider {
+  id: string;
+  name: string;
+  avatar: string;
+  location: string;
+  distance: number; // km
+  rating: number;
+  reviewCount: number;
+  services: ServiceType[];
+  petTypes: PetType[];
+  priceFrom: number; // AUD per night/visit
+  verified: boolean;
+  responseTime: string;
+  aiScore: number; // 0-100
+  aiTags: string[];
+  bio: string;
+  photos: string[];
+  repeatClients: number;
+  yearsExp: number;
+  hasBackgroundCheck: boolean;
+  languages: string[];
+  maxPets: number;
+  homeType: "house" | "apartment" | "farm";
+  hasYard: boolean;
+  availableFrom: string;
+  badge?: "Top Rated" | "New" | "Superhost";
+}
+
+// Unsplash placeholder colours for avatar initials
+const avatarColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD", "#98D8C8", "#F7B7A3"];
+
+export const MOCK_PROVIDERS: Provider[] = [
+  {
+    id: "p1",
+    name: "Emma Richardson",
+    avatar: "ER",
+    location: "Fitzroy, Melbourne",
+    distance: 1.2,
+    rating: 4.97,
+    reviewCount: 143,
+    services: ["boarding", "home-visit", "dog-walking"],
+    petTypes: ["dog", "cat"],
+    priceFrom: 55,
+    verified: true,
+    responseTime: "< 1 hour",
+    aiScore: 96,
+    aiTags: ["Gentle with anxious pets", "Large yard", "Experienced with seniors"],
+    bio: "Lifelong animal lover with 8+ years caring for dogs and cats. My home has a big secure yard — your pup will love it! I treat every pet like my own.",
+    photos: ["🏡", "🌿", "🐕"],
+    repeatClients: 38,
+    yearsExp: 8,
+    hasBackgroundCheck: true,
+    languages: ["English"],
+    maxPets: 3,
+    homeType: "house",
+    hasYard: true,
+    availableFrom: "2026-07-21",
+    badge: "Top Rated",
+  },
+  {
+    id: "p2",
+    name: "James Liu",
+    avatar: "JL",
+    location: "Richmond, Melbourne",
+    distance: 2.8,
+    rating: 4.89,
+    reviewCount: 87,
+    services: ["home-visit", "dog-walking", "daycare"],
+    petTypes: ["dog", "cat", "rabbit"],
+    priceFrom: 42,
+    verified: true,
+    responseTime: "< 2 hours",
+    aiScore: 91,
+    aiTags: ["Great with puppies", "Certified trainer", "Vet nurse background"],
+    bio: "Former vet nurse turned full-time pet carer. I specialise in puppies and nervous animals. Certified in pet first aid.",
+    photos: ["🏠", "🐶", "🌳"],
+    repeatClients: 22,
+    yearsExp: 5,
+    hasBackgroundCheck: true,
+    languages: ["English", "Mandarin"],
+    maxPets: 2,
+    homeType: "apartment",
+    hasYard: false,
+    availableFrom: "2026-07-22",
+    badge: "Top Rated",
+  },
+  {
+    id: "p3",
+    name: "Sophia Nguyen",
+    avatar: "SN",
+    location: "St Kilda, Melbourne",
+    distance: 3.5,
+    rating: 4.95,
+    reviewCount: 201,
+    services: ["boarding", "cat-sitting", "overnight"],
+    petTypes: ["cat", "rabbit", "bird", "small-animal"],
+    priceFrom: 48,
+    verified: true,
+    responseTime: "< 30 min",
+    aiScore: 98,
+    aiTags: ["Cat specialist", "Quiet home", "Medication experienced"],
+    bio: "Dedicated cat specialist with 10 years experience. My calm, quiet home is perfect for cats who get stressed easily. I can administer medication.",
+    photos: ["🛋️", "😺", "🌸"],
+    repeatClients: 67,
+    yearsExp: 10,
+    hasBackgroundCheck: true,
+    languages: ["English", "Vietnamese"],
+    maxPets: 4,
+    homeType: "apartment",
+    hasYard: false,
+    availableFrom: "2026-07-21",
+    badge: "Superhost",
+  },
+  {
+    id: "p4",
+    name: "Liam Carter",
+    avatar: "LC",
+    location: "Brunswick, Melbourne",
+    distance: 2.1,
+    rating: 4.82,
+    reviewCount: 54,
+    services: ["dog-walking", "home-visit", "daycare"],
+    petTypes: ["dog"],
+    priceFrom: 35,
+    verified: true,
+    responseTime: "< 3 hours",
+    aiScore: 84,
+    aiTags: ["High energy dogs welcome", "GPS tracked walks", "Dog park regular"],
+    bio: "Dog walking is my passion! I walk 3–5 dogs daily in local parks. GPS tracked, always punctual. Former personal trainer so your dog will get a real workout.",
+    photos: ["🌲", "🏃", "🐕"],
+    repeatClients: 18,
+    yearsExp: 3,
+    hasBackgroundCheck: true,
+    languages: ["English"],
+    maxPets: 5,
+    homeType: "apartment",
+    hasYard: false,
+    availableFrom: "2026-07-23",
+  },
+  {
+    id: "p5",
+    name: "Priya Sharma",
+    avatar: "PS",
+    location: "Collingwood, Melbourne",
+    distance: 1.7,
+    rating: 4.91,
+    reviewCount: 112,
+    services: ["boarding", "home-visit", "overnight", "daycare"],
+    petTypes: ["dog", "cat", "rabbit", "small-animal"],
+    priceFrom: 60,
+    verified: true,
+    responseTime: "< 1 hour",
+    aiScore: 93,
+    aiTags: ["Multiple pets welcome", "Farm experience", "Special diets"],
+    bio: "Grew up on a farm, comfortable with all kinds of animals. I can handle multiple pets and special dietary needs. Your pets will feel at home with me.",
+    photos: ["🌻", "🐾", "🏡"],
+    repeatClients: 41,
+    yearsExp: 6,
+    hasBackgroundCheck: true,
+    languages: ["English", "Hindi"],
+    maxPets: 6,
+    homeType: "house",
+    hasYard: true,
+    availableFrom: "2026-07-21",
+    badge: "Top Rated",
+  },
+  {
+    id: "p6",
+    name: "Oliver Tan",
+    avatar: "OT",
+    location: "Northcote, Melbourne",
+    distance: 4.2,
+    rating: 4.78,
+    reviewCount: 29,
+    services: ["home-visit", "cat-sitting", "dog-walking"],
+    petTypes: ["dog", "cat", "bird"],
+    priceFrom: 38,
+    verified: true,
+    responseTime: "< 4 hours",
+    aiScore: 79,
+    aiTags: ["Flexible schedule", "Bird keeper", "Drop-in specialist"],
+    bio: "Work from home so I'm always around! Bird owner myself, very comfortable with avian pets. Great for quick drop-ins and check-ins.",
+    photos: ["🦜", "☕", "🏠"],
+    repeatClients: 9,
+    yearsExp: 2,
+    hasBackgroundCheck: false,
+    languages: ["English", "Cantonese"],
+    maxPets: 2,
+    homeType: "apartment",
+    hasYard: false,
+    availableFrom: "2026-07-24",
+    badge: "New",
+  },
+  {
+    id: "p7",
+    name: "Amelia Park",
+    avatar: "AP",
+    location: "South Yarra, Melbourne",
+    distance: 0.9,
+    rating: 4.99,
+    reviewCount: 88,
+    services: ["overnight", "boarding", "home-visit"],
+    petTypes: ["dog", "cat"],
+    priceFrom: 75,
+    verified: true,
+    responseTime: "< 1 hour",
+    aiScore: 99,
+    aiTags: ["Premium care", "Daily photo updates", "Luxury home", "Separation anxiety expert"],
+    bio: "I offer premium boutique pet care with daily photo/video updates. My home has dog-proof fencing, comfy pet beds and enrichment toys. Perfect for precious pets!",
+    photos: ["✨", "🛏️", "📸"],
+    repeatClients: 55,
+    yearsExp: 7,
+    hasBackgroundCheck: true,
+    languages: ["English", "Korean"],
+    maxPets: 2,
+    homeType: "house",
+    hasYard: true,
+    availableFrom: "2026-07-21",
+    badge: "Superhost",
+  },
+  {
+    id: "p8",
+    name: "Noah Williams",
+    avatar: "NW",
+    location: "Prahran, Melbourne",
+    distance: 1.4,
+    rating: 4.85,
+    reviewCount: 67,
+    services: ["dog-walking", "daycare", "boarding"],
+    petTypes: ["dog", "rabbit"],
+    priceFrom: 45,
+    verified: true,
+    responseTime: "< 2 hours",
+    aiScore: 88,
+    aiTags: ["Great with big dogs", "Dog training background", "Active lifestyle"],
+    bio: "Dog trainer by trade, carer by heart. I work well with large breeds and boisterous dogs. Happy to reinforce any training routines while your dog stays.",
+    photos: ["🏋️", "🐕", "🌳"],
+    repeatClients: 27,
+    yearsExp: 4,
+    hasBackgroundCheck: true,
+    languages: ["English"],
+    maxPets: 3,
+    homeType: "house",
+    hasYard: true,
+    availableFrom: "2026-07-22",
+  },
+];
+
+export const SERVICE_LABELS: Record<ServiceType, string> = {
+  "boarding": "Home Boarding",
+  "home-visit": "Home Visit",
+  "dog-walking": "Dog Walking",
+  "overnight": "Overnight Care",
+  "cat-sitting": "Cat Sitting",
+  "daycare": "Doggy Daycare",
+};
+
+export const PET_LABELS: Record<PetType, string> = {
+  "dog": "Dog",
+  "cat": "Cat",
+  "rabbit": "Rabbit",
+  "bird": "Bird",
+  "fish": "Fish",
+  "small-animal": "Small Animals",
+};
+
+export const SERVICE_ICONS: Record<ServiceType, string> = {
+  "boarding": "🏠",
+  "home-visit": "🚶",
+  "dog-walking": "🦮",
+  "overnight": "🌙",
+  "cat-sitting": "😺",
+  "daycare": "☀️",
+};
+
+export const PET_ICONS: Record<PetType, string> = {
+  "dog": "🐶",
+  "cat": "🐱",
+  "rabbit": "🐰",
+  "bird": "🐦",
+  "fish": "🐟",
+  "small-animal": "🐹",
+};
