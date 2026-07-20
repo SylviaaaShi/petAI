@@ -176,7 +176,7 @@ export const PROVIDER_PROFILE = {
   email: "emma.r@example.com",
   languages: ["English"],
   yearsExp: 8,
-  homeType: "house" as const,
+  homeType: "house" as "house" | "apartment" | "farm",
   hasYard: true,
   maxPets: 3,
   serviceRadius: 5,
