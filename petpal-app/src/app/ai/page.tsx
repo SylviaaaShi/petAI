@@ -52,7 +52,7 @@ function buildAIReply(input: string): Omit<Message, "id"> {
   if (greetings.some(g => lower.includes(g)) && lower.length < 20) {
     return {
       role: "ai",
-      text: "Hey there! 👋 I'm your PetPal AI — here to find the perfect carer for your pet.\n\nTell me a bit about your situation. For example:\n• What type of pet do you have?\n• What dates do you need care?\n• Any special requirements?",
+      text: "Hey there! 👋 I'm your Pet Care AI — here to find the perfect carer for your pet.\n\nTell me a bit about your situation. For example:\n• What type of pet do you have?\n• What dates do you need care?\n• Any special requirements?",
       quickReplies: ["I need boarding for my dog 🐶", "Looking for a cat sitter 🐱", "Need someone for my anxious dog", "Dog walking service"],
     };
   }
@@ -214,7 +214,7 @@ function TypingIndicator() {
 const INITIAL_MSG: Message = {
   id: "init",
   role: "ai",
-  text: "Hi! I'm PetPal AI 🐾\n\nTell me about your pet and what you need — I'll find the best carers near you instantly.\n\nFor example: *\"I have an anxious golden retriever who needs boarding for 5 nights next week\"*",
+  text: "Hi! I'm Pet Care AI 🐾\n\nTell me about your pet and what you need — I'll find the best carers near you instantly.\n\nFor example: *\"I have an anxious golden retriever who needs boarding for 5 nights next week\"*",
   quickReplies: ["🐶 Dog boarding", "🐱 Cat sitter", "🦮 Dog walking", "😰 Anxious pet", "💰 Budget options", "🌳 Has a yard"],
 };
 
@@ -256,7 +256,7 @@ export default function AIPage() {
           </Link>
           <Link href="/" className="flex items-center gap-2">
             <span>🐾</span>
-            <span className="font-bold text-amber-500">PetPal AI</span>
+            <span className="font-bold text-amber-500">Pet Care AI</span>
           </Link>
           <div className="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-white text-xs font-bold">S</div>
         </div>
@@ -340,7 +340,7 @@ export default function AIPage() {
               <svg className="w-4 h-4 rotate-90" fill="currentColor" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
             </button>
           </form>
-          <p className="text-center text-[10px] text-gray-300 mt-2">PetPal AI · Responses are simulated for demo purposes</p>
+          <p className="text-center text-[10px] text-gray-300 mt-2">Pet Care AI · Responses are simulated for demo purposes</p>
         </div>
       </div>
     </div>

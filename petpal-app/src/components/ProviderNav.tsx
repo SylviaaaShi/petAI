@@ -41,7 +41,7 @@ export default function ProviderNav() {
   }, []);
 
   function logout() {
-    localStorage.removeItem("petpal_auth");
+    localStorage.removeItem("petcare_auth");
     router.push("/login");
   }
 
@@ -52,7 +52,7 @@ export default function ProviderNav() {
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 shrink-0">
               <svg className="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a2 2 0 100 4 2 2 0 000-4zM6.5 5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm11 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM4 10a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm16 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm-8 2c-2.5 0-5 2-5 4 0 2 1.5 3 3 3 .7 0 1.3-.2 2-.2s1.3.2 2 .2c1.5 0 3-1 3-3 0-2-2.5-4-5-4z"/></svg>
-              <span className="text-lg font-bold text-amber-500">PetPal AI</span>
+              <span className="text-lg font-bold text-amber-500">Pet Care AI</span>
             </Link>
             <div className="hidden sm:flex items-center gap-1">
               {NAV_ITEMS.map((item) => {

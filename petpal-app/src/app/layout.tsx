@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PetPal AI — AI Pet Boarding & Home Care",
+  title: "Pet Care AI — AI Pet Boarding & Home Care",
   description: "Connect with verified pet care providers near you.",
 };
 

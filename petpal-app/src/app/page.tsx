@@ -20,8 +20,8 @@ const steps = [
 
 const testimonials = [
   { name: "Sarah L.", pet: "Golden Retriever owner", text: "The AI matched us with the perfect carer. Buddy has never been happier away from home." },
-  { name: "James T.", pet: "Two cats, one anxious", text: "PetPal understood my anxious cat's needs instantly. Outstanding experience." },
-  { name: "Mei W.", pet: "Rabbit owner", text: "Hard to find rabbit-friendly carers, but PetPal found three great options in minutes." },
+  { name: "James T.", pet: "Two cats, one anxious", text: "Pet Care understood my anxious cat's needs instantly. Outstanding experience." },
+  { name: "Mei W.", pet: "Rabbit owner", text: "Hard to find rabbit-friendly carers, but Pet Care found three great options in minutes." },
 ];
 
 export default function HomePage() {
@@ -45,7 +45,7 @@ export default function HomePage() {
                 While You&apos;re Away
               </h1>
               <p className="text-lg text-gray-500 mb-10 leading-relaxed">
-                PetPal AI connects you with verified, local pet care providers. Our AI matches your pet with the perfect carer so you can travel worry-free.
+                Pet Care AI connects you with verified, local pet care providers. Our AI matches your pet with the perfect carer so you can travel worry-free.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
@@ -152,7 +152,7 @@ export default function HomePage() {
       <section id="how-it-works" className="py-20 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">How PetPal Works</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">How Pet Care Works</h2>
             <p className="text-gray-400 max-w-xl mx-auto text-lg">Book trusted care in four simple steps.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -174,7 +174,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Loved by Pet Owners</h2>
-            <p className="text-gray-400 max-w-xl mx-auto">Join thousands of happy owners who trust PetPal AI.</p>
+            <p className="text-gray-400 max-w-xl mx-auto">Join thousands of happy owners who trust Pet Care AI.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t) => (
@@ -214,7 +214,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between gap-8 mb-8">
             <div>
-              <p className="text-white text-lg font-bold mb-3">PetPal AI</p>
+              <p className="text-white text-lg font-bold mb-3">Pet Care AI</p>
               <p className="text-sm max-w-xs leading-relaxed">
                 AI-powered marketplace connecting pet owners with verified pet care providers.
               </p>
@@ -239,7 +239,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-6 text-xs text-center">
-            © {new Date().getFullYear()} PetPal AI. All rights reserved.
+            © {new Date().getFullYear()} Pet Care AI. All rights reserved.
           </div>
         </div>
       </footer>

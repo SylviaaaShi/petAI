@@ -23,7 +23,7 @@ function DashboardNav() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("petpal_auth");
+    const stored = localStorage.getItem("petcare_auth");
     if (stored) setUser(JSON.parse(stored));
   }, []);
 
@@ -38,7 +38,7 @@ function DashboardNav() {
   }, []);
 
   function logout() {
-    localStorage.removeItem("petpal_auth");
+    localStorage.removeItem("petcare_auth");
     router.push("/login");
   }
 
@@ -50,7 +50,7 @@ function DashboardNav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl">🐾</span>
-          <span className="text-xl font-bold text-amber-500">PetPal AI</span>
+          <span className="text-xl font-bold text-amber-500">Pet Care AI</span>
         </Link>
 
         {/* Search bar */}

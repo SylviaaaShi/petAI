@@ -40,7 +40,7 @@ function RegisterForm() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1000));
     setLoading(false);
-    localStorage.setItem("petpal_auth", JSON.stringify({ role, name: form.name || form.email.split("@")[0] }));
+    localStorage.setItem("petcare_auth", JSON.stringify({ role, name: form.name || form.email.split("@")[0] }));
     router.push(role === "provider" ? "/provider" : "/dashboard");
   }
 
@@ -49,7 +49,7 @@ function RegisterForm() {
       <div className="text-center mb-8">
         <div className="text-5xl mb-4">🐾</div>
         <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
-        <p className="text-gray-500 text-sm mt-1">Join PetPal AI and connect with great carers</p>
+        <p className="text-gray-500 text-sm mt-1">Join Pet Care AI and connect with great carers</p>
       </div>
 
       {/* Role Toggle */}
@@ -188,7 +188,7 @@ function RegisterForm() {
             className="mt-0.5 h-4 w-4 rounded border-gray-300 text-amber-500 focus:ring-amber-400"
           />
           <label htmlFor="terms" className="text-xs text-gray-500 leading-relaxed">
-            I agree to PetPal AI&apos;s{" "}
+            I agree to Pet Care AI&apos;s{" "}
             <Link href="#" className="text-amber-500 hover:underline">Terms of Service</Link>
             {" "}and{" "}
             <Link href="#" className="text-amber-500 hover:underline">Privacy Policy</Link>
@@ -255,7 +255,7 @@ export default function RegisterPage() {
       <div className="p-6">
         <Link href="/" className="inline-flex items-center gap-2">
           <span className="text-2xl">🐾</span>
-          <span className="text-xl font-bold text-amber-500">PetPal AI</span>
+          <span className="text-xl font-bold text-amber-500">Pet Care AI</span>
         </Link>
       </div>
 

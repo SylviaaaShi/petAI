@@ -12,7 +12,7 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("petpal_auth");
+    const stored = localStorage.getItem("petcare_auth");
     if (stored) setUser(JSON.parse(stored));
   }, []);
 
@@ -27,7 +27,7 @@ export default function Navbar() {
   }, []);
 
   function logout() {
-    localStorage.removeItem("petpal_auth");
+    localStorage.removeItem("petcare_auth");
     setUser(null);
     setDropdownOpen(false);
     router.push("/login");
@@ -42,7 +42,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl">🐾</span>
-            <span className="text-xl font-bold text-amber-500">PetPal AI</span>
+            <span className="text-xl font-bold text-amber-500">Pet Care AI</span>
           </Link>
 
           {/* Desktop nav */}

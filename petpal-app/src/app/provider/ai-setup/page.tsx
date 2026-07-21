@@ -62,7 +62,7 @@ function getNextStep(current: Step): Step | null {
 function aiMessageForStep(step: Step, draft: ProfileDraft): Omit<Message, "id"> {
   switch (step) {
     case "name":
-      return { role: "ai", text: "Hi there! 👋 I'm your PetPal AI assistant. I'll help you build your provider profile in just a few minutes.\n\nLet's start with the basics — what's your full name?" };
+      return { role: "ai", text: "Hi there! 👋 I'm your Pet Care AI assistant. I'll help you build your provider profile in just a few minutes.\n\nLet's start with the basics — what's your full name?" };
     case "location":
       return { role: "ai", text: `Nice to meet you, ${draft.name}! 🙌\n\nWhat suburb and city are you based in? (e.g. Fitzroy, Melbourne)` };
     case "homeType":
@@ -283,7 +283,7 @@ export default function ProviderAISetupPage() {
           <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white text-lg">🤖</div>
             <div>
-              <p className="font-semibold text-gray-900 text-sm">PetPal AI Assistant</p>
+              <p className="font-semibold text-gray-900 text-sm">Pet Care AI Assistant</p>
               <p className="text-xs text-green-500 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full inline-block" /> Online · Profile Builder
               </p>

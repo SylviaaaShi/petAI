@@ -27,7 +27,7 @@ export default function LoginPage() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 800));
     setLoading(false);
-    localStorage.setItem("petpal_auth", JSON.stringify({ role, name: form.email.split("@")[0] }));
+    localStorage.setItem("petcare_auth", JSON.stringify({ role, name: form.email.split("@")[0] }));
     router.push(role === "provider" ? "/provider" : "/dashboard");
   }
 
@@ -37,7 +37,7 @@ export default function LoginPage() {
       <div className="p-6">
         <Link href="/" className="inline-flex items-center gap-2">
           <span className="text-2xl">🐾</span>
-          <span className="text-xl font-bold text-amber-500">PetPal AI</span>
+          <span className="text-xl font-bold text-amber-500">Pet Care AI</span>
         </Link>
       </div>
 
@@ -47,7 +47,7 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             <div className="text-5xl mb-4">👋</div>
             <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-            <p className="text-gray-500 text-sm mt-1">Log in to your PetPal account</p>
+            <p className="text-gray-500 text-sm mt-1">Log in to your Pet Care account</p>
           </div>
 
           {/* Role Toggle */}
