@@ -188,6 +188,14 @@ export const PROVIDER_PROFILE = {
     { type: "cat-sitting", name: "Cat Sitting", price: 50, enabled: true, unit: "night" },
     { type: "daycare", name: "Doggy Daycare", price: 45, enabled: false, unit: "day" },
   ],
+  sizeSurcharge: { medium: 10, large: 20 },
+  holidaySurcharge: 20,
+  addOns: [
+    { type: "pickup", name: "Pickup & Drop-off", price: 25, enabled: true },
+    { type: "freshfood", name: "Fresh Food Meals", price: 15, enabled: true },
+    { type: "extraWalk", name: "Extra Daily Walk", price: 20, enabled: false },
+    { type: "report", name: "Daily Photo Report", price: 10, enabled: true },
+  ],
   petTypes: ["dog", "cat"],
   certificates: [
     { name: "Pet First Aid Certificate", issuer: "Red Cross", year: 2024, verified: true },

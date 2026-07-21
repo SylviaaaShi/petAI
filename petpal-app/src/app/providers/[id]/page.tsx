@@ -75,7 +75,23 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [petCount, setPetCount] = useState(1);
+  const [petSize, setPetSize] = useState<"small" | "medium" | "large">("small");
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [activePhoto, setActivePhoto] = useState(0);
+
+  const SIZE_SURCHARGE: Record<string, number> = { small: 0, medium: 10, large: 20 };
+  const ADD_ONS = [
+    { type: "pickup", name: "Pickup & Drop-off", price: 25 },
+    { type: "freshfood", name: "Fresh Food Meals", price: 15 },
+    { type: "extraWalk", name: "Extra Daily Walk", price: 20 },
+    { type: "report", name: "Daily Photo Report", price: 10 },
+  ];
+
+  function toggleAddOn(type: string) {
+    setSelectedAddOns((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
+  }
 
   if (!provider) {
     return (
@@ -92,9 +108,15 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
   const nights = checkIn && checkOut
     ? Math.max(0, Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86400000))
     : 0;
-  const subtotal = provider.priceFrom * Math.max(nights, 1) * petCount;
+  const nightsOrOne = Math.max(nights, 1);
+  const baseRate = provider.priceFrom + SIZE_SURCHARGE[petSize];
+  const subtotal = baseRate * nightsOrOne * petCount;
+  const addOnTotal = selectedAddOns.reduce((sum, type) => {
+    const a = ADD_ONS.find((x) => x.type === type);
+    return sum + (a ? a.price : 0);
+  }, 0);
   const serviceFee = Math.round(subtotal * 0.1);
-  const total = subtotal + serviceFee;
+  const total = subtotal + addOnTotal + serviceFee;
 
   const providerPhotos = [0, 1, 2, 3].map((i) => ALL_PHOTOS[(providerIndex + i) % ALL_PHOTOS.length]);
 
@@ -344,6 +366,7 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
                 <div className="flex items-baseline gap-1 mb-1">
                   <span className="text-2xl font-bold text-gray-900">${provider.priceFrom}</span>
                   <span className="text-gray-400 text-sm">/night</span>
+                  <span className="text-xs text-gray-400 ml-1">from (small)</span>
                 </div>
                 <div className="flex items-center gap-1 mb-5">
                   <span className="text-yellow-400 text-sm">★</span>
@@ -384,14 +407,61 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
                   </div>
                 </div>
 
-                {/* Pet count */}
-                <div className="mb-5">
+                {/* Pet count + size */}
+                <div className="mb-4">
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Number of pets</label>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 mb-3">
                     <button onClick={() => setPetCount(Math.max(1, petCount - 1))} className="w-8 h-8 rounded-full border border-gray-200 text-gray-700 hover:border-amber-400 hover:text-amber-500 font-bold transition-colors">−</button>
                     <span className="text-lg font-semibold text-gray-900 w-8 text-center">{petCount}</span>
                     <button onClick={() => setPetCount(Math.min(provider.maxPets, petCount + 1))} className="w-8 h-8 rounded-full border border-gray-200 text-gray-700 hover:border-amber-400 hover:text-amber-500 font-bold transition-colors">+</button>
                     <span className="text-xs text-gray-400">max {provider.maxPets}</span>
+                  </div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Pet Size</label>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {([
+                      { key: "small", label: "Small", sub: "< 10 kg" },
+                      { key: "medium", label: "Medium", sub: "10–25 kg", surcharge: "+$10" },
+                      { key: "large", label: "Large", sub: "25 kg+", surcharge: "+$20" },
+                    ] as const).map((s) => (
+                      <button
+                        key={s.key}
+                        onClick={() => setPetSize(s.key)}
+                        className={`flex flex-col items-center py-2 px-1 rounded-xl border text-xs transition-all ${
+                          petSize === s.key
+                            ? "border-amber-500 bg-amber-50 text-amber-700"
+                            : "border-gray-200 text-gray-500 hover:border-amber-300"
+                        }`}
+                      >
+                        <span className="font-semibold">{s.label}</span>
+                        <span className="text-gray-400 text-[10px]">{s.sub}</span>
+                        {"surcharge" in s && <span className="text-amber-500 text-[10px] font-medium">{s.surcharge}</span>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Add-ons */}
+                <div className="mb-5">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Add-ons</label>
+                  <div className="space-y-1.5">
+                    {ADD_ONS.map((addon) => {
+                      const checked = selectedAddOns.includes(addon.type);
+                      return (
+                        <button
+                          key={addon.type}
+                          onClick={() => toggleAddOn(addon.type)}
+                          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl border text-xs transition-all text-left ${
+                            checked ? "border-amber-400 bg-amber-50" : "border-gray-100 bg-gray-50 hover:border-gray-300"
+                          }`}
+                        >
+                          <span className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${checked ? "bg-amber-500 border-amber-500" : "border-gray-300"}`}>
+                            {checked && <IcCheck className="w-3 h-3 text-white" />}
+                          </span>
+                          <span className={`flex-1 font-medium ${checked ? "text-amber-700" : "text-gray-600"}`}>{addon.name}</span>
+                          <span className="text-gray-400">+${addon.price}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -399,9 +469,20 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
                 {nights > 0 && (
                   <div className="border-t border-gray-100 pt-4 mb-4 space-y-2 text-sm">
                     <div className="flex justify-between text-gray-600">
-                      <span>${provider.priceFrom} × {nights} night{nights > 1 ? "s" : ""} × {petCount} pet{petCount > 1 ? "s" : ""}</span>
+                      <span>${baseRate} × {nights} night{nights > 1 ? "s" : ""} × {petCount} pet{petCount > 1 ? "s" : ""}</span>
                       <span>${subtotal}</span>
                     </div>
+                    {SIZE_SURCHARGE[petSize] > 0 && (
+                      <div className="flex justify-between text-gray-500 text-xs">
+                        <span>Size surcharge (${SIZE_SURCHARGE[petSize]}/night included)</span>
+                      </div>
+                    )}
+                    {selectedAddOns.length > 0 && (
+                      <div className="flex justify-between text-gray-600">
+                        <span>Add-ons ({selectedAddOns.length})</span>
+                        <span>+${addOnTotal}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-gray-600">
                       <span>Service fee (10%)</span>
                       <span>${serviceFee}</span>

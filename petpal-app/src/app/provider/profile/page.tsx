@@ -99,6 +99,9 @@ function AvailabilityCalendar({ unavailable, onToggle }: {
 export default function ProviderProfilePage() {
   const [profile, setProfile] = useState({ ...PROVIDER_PROFILE });
   const [services, setServices] = useState([...PROVIDER_PROFILE.services]);
+  const [sizeSurcharge, setSizeSurcharge] = useState({ ...PROVIDER_PROFILE.sizeSurcharge });
+  const [holidaySurcharge, setHolidaySurcharge] = useState(PROVIDER_PROFILE.holidaySurcharge);
+  const [addOns, setAddOns] = useState([...PROVIDER_PROFILE.addOns]);
   const [petTypes, setPetTypes] = useState<string[]>([...PROVIDER_PROFILE.petTypes]);
   const [unavailable, setUnavailable] = useState<string[]>([...PROVIDER_PROFILE.unavailableDates]);
   const [saved, setSaved] = useState(false);
@@ -115,6 +118,20 @@ export default function ProviderProfilePage() {
     setPetTypes((prev) =>
       prev.includes(pet) ? prev.filter((p) => p !== pet) : [...prev, pet]
     );
+    setSaved(false);
+  }
+
+  function toggleAddOn(i: number) {
+    const updated = [...addOns];
+    updated[i] = { ...updated[i], enabled: !updated[i].enabled };
+    setAddOns(updated);
+    setSaved(false);
+  }
+
+  function updateAddOnPrice(i: number, price: number) {
+    const updated = [...addOns];
+    updated[i] = { ...updated[i], price };
+    setAddOns(updated);
     setSaved(false);
   }
 
@@ -316,47 +333,147 @@ export default function ProviderProfilePage() {
 
             {/* Services & Pricing */}
             {activeSection === "services" && (
-              <div className="bg-white rounded-2xl border border-gray-100 p-6">
-                <h3 className="font-semibold text-gray-900 text-lg mb-2">Services & Pricing</h3>
-                <p className="text-sm text-gray-400 mb-6">Toggle services on/off and set your price per unit.</p>
-                <div className="space-y-3">
-                  {services.map((svc, i) => (
-                    <div
-                      key={svc.type}
-                      className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${
-                        svc.enabled ? "border-amber-200 bg-amber-50" : "border-gray-100 bg-gray-50 opacity-60"
-                      }`}
-                    >
-                      <button
-                        onClick={() => toggleService(i)}
-                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
-                          svc.enabled ? "bg-amber-500" : "bg-gray-300"
+              <div className="space-y-5">
+
+                {/* Base service prices */}
+                <div className="bg-white rounded-2xl border border-gray-100 p-6">
+                  <h3 className="font-semibold text-gray-900 text-lg mb-1">Services & Base Prices</h3>
+                  <p className="text-sm text-gray-400 mb-5">Toggle services on/off and set your base price per unit.</p>
+                  <div className="space-y-3">
+                    {services.map((svc, i) => (
+                      <div
+                        key={svc.type}
+                        className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${
+                          svc.enabled ? "border-amber-200 bg-amber-50" : "border-gray-100 bg-gray-50 opacity-60"
                         }`}
                       >
-                        <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition-transform ${svc.enabled ? "translate-x-5" : "translate-x-0"}`} />
-                      </button>
-
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-gray-800">{svc.name}</p>
-                        <p className="text-xs text-gray-400">per {svc.unit}</p>
+                        <button
+                          onClick={() => toggleService(i)}
+                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
+                            svc.enabled ? "bg-amber-500" : "bg-gray-300"
+                          }`}
+                        >
+                          <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition-transform ${svc.enabled ? "translate-x-5" : "translate-x-0"}`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-gray-800">{svc.name}</p>
+                          <p className="text-xs text-gray-400">per {svc.unit}</p>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm text-gray-500">$</span>
+                          <input
+                            type="number" min={10} max={500} value={svc.price}
+                            onChange={(e) => updatePrice(i, Number(e.target.value))}
+                            disabled={!svc.enabled}
+                            className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-40 bg-white"
+                          />
+                          <span className="text-xs text-gray-400">AUD</span>
+                        </div>
                       </div>
-
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-sm text-gray-500">$</span>
-                        <input
-                          type="number"
-                          min={10}
-                          max={500}
-                          value={svc.price}
-                          onChange={(e) => { updatePrice(i, Number(e.target.value)); }}
-                          disabled={!svc.enabled}
-                          className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-40 bg-white"
-                        />
-                        <span className="text-xs text-gray-400">AUD</span>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
+
+                {/* Size surcharge */}
+                <div className="bg-white rounded-2xl border border-gray-100 p-6">
+                  <h3 className="font-semibold text-gray-900 text-base mb-1">Pet Size Surcharge</h3>
+                  <p className="text-sm text-gray-400 mb-5">Extra charge added on top of base price based on pet size.</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-800">Small (under 10 kg)</p>
+                        <p className="text-xs text-gray-400">Base price — no surcharge</p>
+                      </div>
+                      <span className="text-sm font-semibold text-gray-400">+$0</span>
+                    </div>
+                    {(["medium", "large"] as const).map((size) => (
+                      <div key={size} className="flex items-center gap-4 p-4 rounded-xl border border-amber-100 bg-amber-50">
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-gray-800 capitalize">{size} {size === "medium" ? "(10–25 kg)" : "(25 kg+)"}</p>
+                          <p className="text-xs text-gray-400">Added per night / visit</p>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm text-gray-500">+$</span>
+                          <input
+                            type="number" min={0} max={100}
+                            value={sizeSurcharge[size]}
+                            onChange={(e) => { setSizeSurcharge({ ...sizeSurcharge, [size]: Number(e.target.value) }); setSaved(false); }}
+                            className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
+                          />
+                          <span className="text-xs text-gray-400">AUD</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Holiday surcharge */}
+                <div className="bg-white rounded-2xl border border-gray-100 p-6">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="font-semibold text-gray-900 text-base">Holiday Surcharge</h3>
+                    <button
+                      onClick={() => { setHolidaySurcharge(holidaySurcharge === 0 ? 20 : 0); setSaved(false); }}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${holidaySurcharge > 0 ? "bg-amber-500" : "bg-gray-300"}`}
+                    >
+                      <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition-transform ${holidaySurcharge > 0 ? "translate-x-5" : "translate-x-0"}`} />
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-400 mb-4">Apply a percentage surcharge during public holidays and peak periods.</p>
+                  {holidaySurcharge > 0 && (
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-gray-600">Surcharge rate</span>
+                      <div className="flex items-center gap-1.5">
+                        <input
+                          type="number" min={5} max={100} step={5}
+                          value={holidaySurcharge}
+                          onChange={(e) => { setHolidaySurcharge(Number(e.target.value)); setSaved(false); }}
+                          className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
+                        />
+                        <span className="text-sm text-gray-500">%</span>
+                      </div>
+                      <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full">e.g. $55 → ${Math.round(55 * (1 + holidaySurcharge / 100))}/night on holidays</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Add-on services */}
+                <div className="bg-white rounded-2xl border border-gray-100 p-6">
+                  <h3 className="font-semibold text-gray-900 text-base mb-1">Add-on Services</h3>
+                  <p className="text-sm text-gray-400 mb-5">Optional extras pet owners can add to their booking.</p>
+                  <div className="space-y-3">
+                    {addOns.map((addon, i) => (
+                      <div
+                        key={addon.type}
+                        className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${
+                          addon.enabled ? "border-amber-200 bg-amber-50" : "border-gray-100 bg-gray-50 opacity-60"
+                        }`}
+                      >
+                        <button
+                          onClick={() => toggleAddOn(i)}
+                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${addon.enabled ? "bg-amber-500" : "bg-gray-300"}`}
+                        >
+                          <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition-transform ${addon.enabled ? "translate-x-5" : "translate-x-0"}`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-gray-800">{addon.name}</p>
+                          <p className="text-xs text-gray-400">per booking</p>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm text-gray-500">$</span>
+                          <input
+                            type="number" min={5} max={200}
+                            value={addon.price}
+                            onChange={(e) => updateAddOnPrice(i, Number(e.target.value))}
+                            disabled={!addon.enabled}
+                            className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:opacity-40 bg-white"
+                          />
+                          <span className="text-xs text-gray-400">AUD</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             )}
 
