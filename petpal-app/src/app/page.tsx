@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function IcSparkles({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -297,28 +298,394 @@ function AIMatcherCard() {
   );
 }
 
+// ── AI Journey Section ────────────────────────────────────────────────────────
+
+const CHECK_ITEMS = ["Experience", "Availability", "Reviews", "Distance", "Pet compatibility"];
+const PROC_STEPS = [
+  { icon: "🐾", label: "Pet Profile" },
+  { icon: "🧠", label: "AI Matching" },
+  { icon: "🏡", label: "Best Provider" },
+  { icon: "📅", label: "Booking Confirmed" },
+];
+
+function AIJourneySection() {
+  const [stage, setStage] = useState(-1);
+  const [checkedCount, setCheckedCount] = useState(0);
+  const [providerCount, setProviderCount] = useState(0);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const hasStarted = useRef(false);
+
+  function startAnimation() {
+    timersRef.current.forEach(clearTimeout);
+    setStage(0); setCheckedCount(0); setProviderCount(0);
+    const schedule: [number, () => void][] = [
+      [300,  () => setStage(1)],
+      [700,  () => setStage(2)],
+      [1100, () => setStage(3)],
+      [1600, () => setStage(4)],
+      [2400, () => setStage(5)],
+      [2900, () => setStage(6)],
+      [3200, () => setCheckedCount(1)],
+      [3500, () => setCheckedCount(2)],
+      [3800, () => setCheckedCount(3)],
+      [4100, () => setCheckedCount(4)],
+      [4400, () => setCheckedCount(5)],
+      [4800, () => setStage(7)],
+      [5800, () => setStage(8)],
+      [6300, () => setStage(9)],
+    ];
+    timersRef.current = schedule.map(([d, fn]) => setTimeout(fn, d));
+  }
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting && !hasStarted.current) { hasStarted.current = true; startAnimation(); } },
+      { threshold: 0.2 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => { observer.disconnect(); timersRef.current.forEach(clearTimeout); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (stage === 7) {
+      let n = 0;
+      const iv = setInterval(() => {
+        n += Math.floor(Math.random() * 16) + 8;
+        if (n >= 247) { n = 247; clearInterval(iv); }
+        setProviderCount(n);
+      }, 50);
+      return () => clearInterval(iv);
+    }
+  }, [stage]);
+
+  const procActive = stage >= 9 ? 3 : stage >= 7 ? 2 : stage >= 4 ? 1 : stage >= 1 ? 0 : -1;
+  const lineWidth = procActive >= 3 ? "100%" : procActive >= 2 ? "66%" : procActive >= 1 ? "33%" : "0%";
+
+  return (
+    <section ref={sectionRef} id="how-it-works" className="py-24 px-4 bg-white">
+      <div className="max-w-[1200px] mx-auto">
+
+        {/* Header */}
+        <div className="text-center mb-14">
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+            How Pet Care AI Finds<br />Your Perfect Match
+          </h2>
+          <p className="text-gray-400 text-lg">
+            Simply tell us about your pet. Our AI handles everything else.
+          </p>
+        </div>
+
+        {/* Split panel */}
+        <div className="flex flex-col lg:flex-row rounded-[28px] overflow-hidden shadow-2xl shadow-gray-200/70 border border-gray-100">
+
+          {/* LEFT — Chat */}
+          <div className="lg:w-[45%] bg-[#0E0E0E] p-7 flex flex-col" style={{ minHeight: 520 }}>
+            {/* Chat header */}
+            <div className="flex items-center gap-3 mb-7 pb-5 border-b border-white/[0.06]">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-900/30">
+                <IcSparkles className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-white text-sm font-semibold">Pet Care AI</p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                  <span className="text-green-400 text-[11px]">Online</span>
+                </div>
+              </div>
+              <button
+                onClick={() => { hasStarted.current = false; startAnimation(); }}
+                className="ml-auto text-[11px] text-white/25 hover:text-white/60 transition-colors font-medium"
+              >
+                ↺ Replay
+              </button>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 space-y-3">
+              <AnimatePresence>
+                {stage >= 1 && (
+                  <motion.div key="u1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-end">
+                    <div className="bg-amber-500 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[82%] leading-relaxed">
+                      👤 I&apos;m traveling to Sydney next weekend.
+                    </div>
+                  </motion.div>
+                )}
+                {stage >= 2 && (
+                  <motion.div key="u2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-end">
+                    <div className="bg-amber-500 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[82%] leading-relaxed">
+                      I have a 3-year-old Golden Retriever.
+                    </div>
+                  </motion.div>
+                )}
+                {stage >= 3 && (
+                  <motion.div key="u3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-end">
+                    <div className="bg-amber-500 text-white text-sm px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[82%] leading-relaxed">
+                      Friendly with other dogs. Needs two walks per day.
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Typing indicator */}
+              <AnimatePresence>
+                {stage === 4 && (
+                  <motion.div key="typing" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="flex items-end gap-2">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shrink-0">
+                      <IcSparkles className="w-3.5 h-3.5 text-white" />
+                    </div>
+                    <div className="bg-[#1C1C1C] border border-white/[0.07] px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
+                      <span className="typing-dot w-1.5 h-1.5 rounded-full bg-white/40 inline-block" />
+                      <span className="typing-dot w-1.5 h-1.5 rounded-full bg-white/40 inline-block" />
+                      <span className="typing-dot w-1.5 h-1.5 rounded-full bg-white/40 inline-block" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* AI response bubble */}
+              <AnimatePresence>
+                {stage >= 5 && (
+                  <motion.div key="ai-reply" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex items-end gap-2">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shrink-0">
+                      <IcSparkles className="w-3.5 h-3.5 text-white" />
+                    </div>
+                    <div className="bg-[#1C1C1C] border border-white/[0.07] px-4 py-3.5 rounded-2xl rounded-bl-sm text-sm text-white/85 max-w-[88%]">
+                      <p>Thanks! Searching verified providers nearby…</p>
+
+                      {stage >= 6 && (
+                        <div className="mt-3 space-y-1.5">
+                          <p className="text-white/30 text-xs mb-2">Checking:</p>
+                          {CHECK_ITEMS.slice(0, checkedCount).map((item, i) => (
+                            <motion.div
+                              key={item}
+                              initial={{ opacity: 0, x: -6 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: i * 0.04 }}
+                              className="flex items-center gap-2 text-xs text-white/65"
+                            >
+                              <span className="text-green-400 font-bold text-sm">✓</span>{item}
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+
+                      {stage >= 7 && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3 pt-3 border-t border-white/[0.06]">
+                          <p className="text-white/40 text-xs tabular-nums">
+                            {providerCount} providers analyzed
+                          </p>
+                        </motion.div>
+                      )}
+
+                      {stage >= 8 && (
+                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="mt-3">
+                          <span className="inline-flex items-center gap-1.5 bg-amber-500/15 border border-amber-400/20 text-amber-300 text-xs font-semibold px-3 py-1.5 rounded-full">
+                            <IcSparkles className="w-3 h-3" /> Best match found!
+                          </span>
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* RIGHT — Provider Card */}
+          <div className="lg:w-[55%] bg-gradient-to-br from-amber-50/50 via-white to-white p-10 flex items-center justify-center" style={{ minHeight: 520 }}>
+            <AnimatePresence mode="wait">
+              {stage >= 9 ? (
+                <motion.div
+                  key="card"
+                  initial={{ opacity: 0, x: 40, y: 8 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden w-full max-w-[340px]"
+                >
+                  <div className="relative h-44 bg-amber-100 overflow-hidden">
+                    <Image src="/staff/WechatIMG53.jpg" alt="Sarah Johnson" fill className="object-cover object-top" sizes="340px" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.35 }}
+                      className="absolute top-3 right-3 bg-amber-500 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg"
+                    >
+                      <IcSparkles className="w-3 h-3" /> 95% Match
+                    </motion.div>
+                  </div>
+
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-xl">Sarah Johnson</h3>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="text-yellow-400 text-sm">★★★★★</span>
+                          <span className="text-sm font-bold text-gray-800">4.9</span>
+                          <span className="text-gray-400 text-sm">· 218 reviews</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-extrabold text-gray-900">$42</p>
+                        <p className="text-xs text-gray-400">/day</p>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-gray-400 mb-4 flex items-center gap-1">
+                      <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      1.2 km away
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {["✓ Golden Retriever Expert", "✓ Verified", "✓ First Aid Certified"].map((b, i) => (
+                        <motion.span
+                          key={b}
+                          initial={{ opacity: 0, y: 4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.4 + i * 0.1 }}
+                          className="text-[11px] bg-green-50 text-green-700 border border-green-100 px-2.5 py-1 rounded-full font-medium"
+                        >
+                          {b}
+                        </motion.span>
+                      ))}
+                    </div>
+
+                    <div className="bg-amber-50 border border-amber-100 rounded-2xl p-3 mb-5">
+                      <p className="text-xs text-amber-800 leading-relaxed">
+                        Matched because Sarah has cared for over 80 Golden Retrievers and is available during your travel dates.
+                      </p>
+                    </div>
+
+                    <Link
+                      href="/login"
+                      className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 rounded-2xl text-sm text-center block transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-amber-100"
+                    >
+                      Book Now →
+                    </Link>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div key="placeholder" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center gap-4 text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center">
+                    <IcSparkles className="w-7 h-7 text-gray-300" />
+                  </div>
+                  <p className="text-gray-300 text-sm">Your perfect match will appear here</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Processing bar */}
+        <div className="mt-8 bg-[#FAFAFA] rounded-2xl border border-gray-100 px-8 py-6">
+          <div className="relative flex items-start justify-between">
+            {/* Track line */}
+            <div className="absolute left-5 right-5 top-5 h-0.5 bg-gray-100 z-0 overflow-hidden rounded-full">
+              <motion.div
+                className="h-full rounded-full animate-flow-line"
+                initial={{ width: "0%" }}
+                animate={{ width: lineWidth }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+            </div>
+
+            {PROC_STEPS.map((s, i) => (
+              <div key={s.label} className="relative z-10 flex flex-col items-center gap-2">
+                <motion.div
+                  animate={i <= procActive ? { scale: [1, 1.15, 1], boxShadow: ["0 0 0 0 rgba(245,158,11,0)", "0 0 0 8px rgba(245,158,11,0.12)", "0 0 0 0 rgba(245,158,11,0)"] } : {}}
+                  transition={{ duration: 0.6, delay: i * 0.15 }}
+                  className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-base bg-white transition-all duration-500 ${i <= procActive ? "border-amber-400 shadow-md shadow-amber-100" : "border-gray-200"}`}
+                >
+                  {s.icon}
+                </motion.div>
+                <span className={`text-xs font-medium transition-colors duration-500 whitespace-nowrap ${i <= procActive ? "text-gray-700" : "text-gray-300"}`}>
+                  {s.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
 // ── Static page content ───────────────────────────────────────────────────────
 
 const services = [
   { title: "Home Boarding", desc: "Your pet stays in a warm home, not a kennel.", photo: "/dashboard/WechatIMG38.jpg", tag: "Most Popular" },
   { title: "Home Visits", desc: "A carer visits your home to feed and check in.", photo: "/dashboard/WechatIMG46.jpg", tag: null },
   { title: "Dog Walking", desc: "Daily walks by GPS-tracked local walkers.", photo: "/WechatIMG15.jpg", tag: null },
-  { title: "Overnight Care", desc: "A carer sleeps at your home overnight.", photo: "/dashboard/WechatIMG41.jpg", tag: null },
+  { title: "Emergency Care", desc: "Last-minute or urgent bookings, matched within minutes.", photo: "/dashboard/WechatIMG49.jpg", tag: "24/7" },
   { title: "Cat Sitting", desc: "In-home care for cats who prefer their own space.", photo: "/WechatIMG14.jpg", tag: null },
   { title: "AI Matching", desc: "Instantly matched to the perfect carer for your pet.", photo: "/dashboard/WechatIMG47.jpg", tag: "New" },
 ];
 
-const steps = [
-  { num: "01", title: "Create Your Pet Profile", desc: "Add breed, habits, health records and personality so carers know exactly what to expect." },
-  { num: "02", title: "AI Finds the Best Match", desc: "Our algorithm scores every nearby provider and surfaces the top picks for you." },
-  { num: "03", title: "Book & Pay Securely", desc: "Confirm in seconds, pay online, and receive instant confirmation." },
-  { num: "04", title: "Relax & Track", desc: "Get real-time updates and AI-powered health reminders during the stay." },
+const _steps = [
+  {
+    num: "01",
+    title: "Build Your Pet's Profile",
+    desc: "Add breed, age, personality quirks, diet, and health records. The more we know, the smarter the match.",
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+      </svg>
+    ),
+    detail: "Breed · Age · Diet · Health · Personality",
+    color: "bg-amber-50 text-amber-500 border-amber-200",
+    dot: "bg-amber-400",
+  },
+  {
+    num: "02",
+    title: "AI Scans 247 Providers",
+    desc: "Our model scores every nearby carer on compatibility, availability, home environment, and past reviews.",
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+      </svg>
+    ),
+    detail: "Match score · Availability · Home type · Reviews",
+    color: "bg-blue-50 text-blue-500 border-blue-200",
+    dot: "bg-blue-400",
+  },
+  {
+    num: "03",
+    title: "Pick Your Top Match",
+    desc: "Browse AI-ranked results with trust scores, real photos of their home, and verified reviews.",
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+      </svg>
+    ),
+    detail: "Ranked results · Real photos · Trust score",
+    color: "bg-purple-50 text-purple-500 border-purple-200",
+    dot: "bg-purple-400",
+  },
+  {
+    num: "04",
+    title: "Book, Pay & Relax",
+    desc: "Confirm in seconds, pay securely online, then get live updates and photo reports during the stay.",
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.6} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    detail: "Instant booking · Secure pay · Live updates",
+    color: "bg-green-50 text-green-600 border-green-200",
+    dot: "bg-green-400",
+  },
 ];
 
 const testimonials = [
   { name: "Sarah L.", pet: "Golden Retriever owner", text: "The AI matched us with the perfect carer. Buddy has never been happier away from home." },
   { name: "James T.", pet: "Two cats, one anxious", text: "Pet Care AI understood my anxious cat's needs instantly. Outstanding experience." },
   { name: "Mei W.", pet: "Rabbit owner", text: "Hard to find rabbit-friendly carers, but Pet Care AI found three great options in minutes." },
+  { name: "Emily C.", pet: "Beagle owner", text: "Booked same-day through Emergency Care. The carer was at my door in under an hour. Incredible." },
+  { name: "David K.", pet: "Two dogs", text: "The match score was spot on — our dogs immediately loved Emma. Will use every trip." },
+  { name: "Aisha R.", pet: "Persian cat owner", text: "My cat is very particular. Pet Care AI found someone who has kept Persians for 6 years. Perfect." },
 ];
 
 export default function HomePage() {
@@ -443,6 +810,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <AIJourneySection />
+
       {/* ── Photo banner ── */}
       <section className="max-w-6xl mx-auto px-4 pb-6">
         <div className="rounded-2xl overflow-hidden h-96 sm:h-[520px]">
@@ -456,40 +825,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── How it works ── */}
-      <section id="how-it-works" className="py-20 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">How Pet Care AI Works</h2>
-            <p className="text-gray-400 max-w-xl mx-auto text-lg">Book trusted care in four simple steps.</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {steps.map((step) => (
-              <div key={step.num} className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-100 text-amber-500 text-xl font-bold mb-5 tabular-nums">
-                  {step.num}
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-3 text-lg">{step.title}</h3>
-                <p className="text-gray-400 text-base leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Testimonials ── */}
-      <section id="providers" className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Loved by Pet Owners</h2>
-            <p className="text-gray-400 max-w-xl mx-auto">Join thousands of happy owners who trust Pet Care AI.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t) => (
-              <div key={t.name} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-amber-100 transition-all">
-                <div className="flex gap-0.5 text-yellow-400 text-sm mb-4">
-                  {"★★★★★".split("").map((s, i) => <span key={i}>{s}</span>)}
-                </div>
+      <section id="providers" className="py-20 overflow-hidden">
+        <div className="text-center mb-12 px-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Loved by Pet Owners</h2>
+          <p className="text-gray-400 max-w-xl mx-auto">Join thousands of happy owners who trust Pet Care AI.</p>
+        </div>
+
+        {/* Scrolling track */}
+        <div className="relative">
+          {/* Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+          <div className="flex gap-5 w-max animate-marquee hover:[animation-play-state:paused]">
+            {[...testimonials, ...testimonials].map((t, i) => (
+              <div
+                key={i}
+                className="w-72 shrink-0 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-amber-200 transition-all"
+              >
+                <div className="flex gap-0.5 text-yellow-400 text-sm mb-4">★★★★★</div>
                 <p className="text-gray-600 text-sm leading-relaxed mb-5">&ldquo;{t.text}&rdquo;</p>
                 <div>
                   <p className="font-semibold text-gray-900 text-sm">{t.name}</p>
