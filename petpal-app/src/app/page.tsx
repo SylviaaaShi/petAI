@@ -4,7 +4,23 @@ import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+
+function FadeUp({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -80px 0px" });
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 function IcSparkles({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -763,15 +779,15 @@ export default function HomePage() {
       {/* ── Services ── */}
       <section id="services" className="py-24 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <FadeUp className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-5">Services We Offer</h2>
             <p className="text-gray-400 max-w-md mx-auto text-lg">Every care need covered — matched by AI to your pet.</p>
-          </div>
+          </FadeUp>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((s) => (
+            {services.map((s, i) => (
+              <FadeUp key={s.title} delay={i * 0.08}>
               <div
-                key={s.title}
-                className="group relative bg-white rounded-3xl overflow-hidden border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-100/60 hover:border-amber-200"
+                className="group relative bg-white rounded-3xl overflow-hidden border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-100/60 hover:border-amber-200 h-full"
               >
                 {/* Photo */}
                 <div className="relative h-52 overflow-hidden">
@@ -805,6 +821,7 @@ export default function HomePage() {
                 {/* Glow ring on hover */}
                 <div className="absolute inset-0 rounded-3xl ring-0 group-hover:ring-2 ring-amber-300/50 transition-all duration-300 pointer-events-none" />
               </div>
+              </FadeUp>
             ))}
           </div>
         </div>
@@ -814,6 +831,7 @@ export default function HomePage() {
 
       {/* ── Photo banner ── */}
       <section className="max-w-6xl mx-auto px-4 pb-6">
+        <FadeUp>
         <div className="rounded-2xl overflow-hidden h-96 sm:h-[520px]">
           <Image
             src="/homepage.jpg"
@@ -823,14 +841,15 @@ export default function HomePage() {
             className="w-full h-full object-cover"
           />
         </div>
+        </FadeUp>
       </section>
 
       {/* ── Testimonials ── */}
       <section id="providers" className="py-20 overflow-hidden">
-        <div className="text-center mb-12 px-4">
+        <FadeUp className="text-center mb-12 px-4">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Loved by Pet Owners</h2>
           <p className="text-gray-400 max-w-xl mx-auto">Join thousands of happy owners who trust Pet Care AI.</p>
-        </div>
+        </FadeUp>
 
         {/* Scrolling track */}
         <div className="relative">
@@ -858,7 +877,7 @@ export default function HomePage() {
 
       {/* ── CTA ── */}
       <section className="py-20 px-4 bg-gradient-to-r from-amber-500 to-amber-400">
-        <div className="max-w-3xl mx-auto text-center text-white">
+        <FadeUp className="max-w-3xl mx-auto text-center text-white">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Ready to Find the Perfect Carer?</h2>
           <p className="text-amber-100 mb-8 text-lg">Sign up free and let AI find the best match for your pet in seconds.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -869,7 +888,7 @@ export default function HomePage() {
               Become a Provider
             </Link>
           </div>
-        </div>
+        </FadeUp>
       </section>
 
       {/* ── Footer ── */}
