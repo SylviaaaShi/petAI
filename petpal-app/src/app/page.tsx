@@ -300,12 +300,12 @@ function AIMatcherCard() {
 // ── Static page content ───────────────────────────────────────────────────────
 
 const services = [
-  { title: "Home Boarding", desc: "Your pet stays at a verified provider's home in a warm, family environment." },
-  { title: "Home Visits", desc: "A carer visits your home to feed, play and check on your pet." },
-  { title: "Dog Walking", desc: "Daily walks by experienced, GPS-tracked local walkers." },
-  { title: "Overnight Care", desc: "A carer stays at your home so your pet sleeps in familiar surroundings." },
-  { title: "Cat Sitting", desc: "Specialist in-home care for cats who prefer their own territory." },
-  { title: "AI Matching", desc: "Our AI finds the perfect provider based on your pet's unique profile." },
+  { title: "Home Boarding", desc: "Your pet stays in a warm home, not a kennel.", photo: "/dashboard/WechatIMG38.jpg", tag: "Most Popular" },
+  { title: "Home Visits", desc: "A carer visits your home to feed and check in.", photo: "/dashboard/WechatIMG46.jpg", tag: null },
+  { title: "Dog Walking", desc: "Daily walks by GPS-tracked local walkers.", photo: "/WechatIMG15.jpg", tag: null },
+  { title: "Overnight Care", desc: "A carer sleeps at your home overnight.", photo: "/dashboard/WechatIMG41.jpg", tag: null },
+  { title: "Cat Sitting", desc: "In-home care for cats who prefer their own space.", photo: "/WechatIMG14.jpg", tag: null },
+  { title: "AI Matching", desc: "Instantly matched to the perfect carer for your pet.", photo: "/dashboard/WechatIMG47.jpg", tag: "New" },
 ];
 
 const steps = [
@@ -394,18 +394,49 @@ export default function HomePage() {
       </section>
 
       {/* ── Services ── */}
-      <section id="services" className="py-20 px-4">
+      <section id="services" className="py-24 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Services We Offer</h2>
-            <p className="text-gray-400 max-w-xl mx-auto text-lg">From overnight boarding to quick drop-in visits — every care need covered.</p>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-5">Services We Offer</h2>
+            <p className="text-gray-400 max-w-md mx-auto text-lg">Every care need covered — matched by AI to your pet.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((s) => (
-              <div key={s.title} className="bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-md hover:border-amber-200 transition-all group">
-                <div className="w-8 h-0.5 bg-amber-400 mb-5 group-hover:w-14 transition-all duration-300" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{s.title}</h3>
-                <p className="text-gray-400 text-base leading-relaxed">{s.desc}</p>
+              <div
+                key={s.title}
+                className="group relative bg-white rounded-3xl overflow-hidden border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-100/60 hover:border-amber-200"
+              >
+                {/* Photo */}
+                <div className="relative h-52 overflow-hidden">
+                  <Image
+                    src={s.photo}
+                    alt={s.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                  {/* Overlay gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  {/* Tag */}
+                  {s.tag && (
+                    <span className="absolute top-3 left-3 bg-amber-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">
+                      {s.tag}
+                    </span>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="p-7">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{s.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{s.desc}</p>
+                  <div className="mt-5 flex items-center gap-1 text-amber-500 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    Learn more
+                    <svg className="w-4 h-4 translate-x-0 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
+                  </div>
+                </div>
+
+                {/* Glow ring on hover */}
+                <div className="absolute inset-0 rounded-3xl ring-0 group-hover:ring-2 ring-amber-300/50 transition-all duration-300 pointer-events-none" />
               </div>
             ))}
           </div>
